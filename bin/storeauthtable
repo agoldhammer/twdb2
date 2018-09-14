@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+from twdb2.dbif import mapAuthorToLang, getAuthors, storeAuthor
+
+auth2lang = {"AmbroseEP": "E", "LeNouvelObs": "F", "GuardianBooks": "E",
+             "SPIEGELONLINE": "G", "LEXPRESS": "F", "quatremer": "F",
+             "mediapart": "F",  "FRonline": "F", "Le_Figaro": "F",
+             "leJDD": "F", "LePoint": "F", "faznet": "G",
+             "guardian": "E", "guardiannews": "E", "libe": "F",
+             "lemondefr": "F", "ThomasWieder": "F",
+             "zeitonline_pol": "G", "SZ": "G", "Corriereit": "I",
+             "LesEchos": "F", "fteconomics": "E", "GdnPolitics": "E",
+             "zeitonline_kul": "G", "repubblicait": "I",
+             "RaphaelleBacque": "F", "martinwolf_": "E", "philipstephens": "E",
+             "LeHuffPost": "F", "HuffPostItalia": "I", "Slatefr": "F",
+             "lobs": "F", "Corriere": "I", "fr": "G", "repubblica": "I",
+             "Mediapart": "F"}
+
+
+def main():
+    insert_all()
+    display_all()
+
+
+def insert_all():
+    for author, lang in auth2lang.items():
+        storeAuthor(author, lang)
+
+
+def display_all():
+    print("inserted")
+    authors = getAuthors()
+    for author in authors:
+        lang = mapAuthorToLang(author)
+        print(f"{author} speaks {lang}")
+
+
+if __name__ == '__main__':
+    main()

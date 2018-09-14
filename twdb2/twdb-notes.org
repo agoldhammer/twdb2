@@ -1,0 +1,5 @@
+## For twdb2 !!
+* move logging into /var/log
+* lang field has been removed from statuses
+* nginx certbot setup
+** https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-debian-9?utm_medium=email&utm_source=IaaN&utm_campaign=09132018

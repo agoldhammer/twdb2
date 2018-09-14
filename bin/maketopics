@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+
+"""
+Run this program to update topics collection in database
+  after a change to topics.txt
+"""
+import sys
+
+from collections import namedtuple
+from twdb2.dbif import getTopics, storeTopic, cleanTopicsCollection
+
+"""
+Builds database from topics.txt
+File should be arranged as follows
+topic (abbrev used in query):Description:Category:Query
+example:
+Greece:Greece:Countries:Greece Grèce Grecia Griechenland
+"""
+
+row = namedtuple("row", ["topic", "desc", "cat", "query"])
+
+
+def display_all():
+    topics = getTopics()
+    for topic in topics:
+        print("{}: {} : {} : {}".format(topic["topic"],
+                                        topic["desc"],
+                                        topic["cat"],
+                                        topic["query"]))
+
+
+def main():
+    # clean topics collection before updating
+    try:
+        fname = sys.argv[1]
+    except:
+        print("Must specify topic file name")
+        sys.exit(1)
+    cleanTopicsCollection()
+    with open(fname) as f:
+        for line in f:
+            if line != '\n' and not line.startswith("#"):
+                line = line.strip().split(":")
+                assert(len(line) == 4)
+                topic = row(*line)._asdict()
+                storeTopic(topic)
+
+
+if __name__ == '__main__':
+    main()
+    display_all()

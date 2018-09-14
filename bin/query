@@ -1,0 +1,24 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+import sys
+from twdb2.cmdline import processCmdLine
+from twdb2.dbif import esearch
+from twdb2.prettytext import printMatches
+
+
+class SearchException(Exception):
+    pass
+
+
+def main():
+    search_context = processCmdLine()
+    err, cursor = esearch(search_context)
+    if err is not None:
+        print("Error parsing query:", err)
+    else:
+        printMatches(cursor)
+
+
+if __name__ == '__main__':
+    main()
+    sys.exit(0)

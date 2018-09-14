@@ -1,0 +1,16 @@
+bak/*
+twdb.egg-info/*
+*~
+twdb.conf
+twdb/__pycache__/
+twdb.log
+tests/__pycache__
+#*
+cache/
+.dockerignore
+.envrc
+dist/
+dockerfile
+readfeed.sh
+start-in-container.sh
+twdb/__init__.pyc
