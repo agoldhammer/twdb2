@@ -35,6 +35,9 @@ host = config.get('db', "HOST")
 twdbConfig['DBHOST'] = 'localhost' if host is None else host
 twdbConfig['DBNAME'] = config.get('db', 'DBNAME')
 
+twdbConfig['authfile'] = config.get('authors', 'authfile')
+twdbConfig['topicsfile'] = config.get('topics', 'topicsfile')
+
 
 if __name__ == '__main__':
     print(twdbConfig)

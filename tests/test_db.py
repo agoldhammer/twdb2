@@ -1,7 +1,7 @@
-from twdb.dbconnect import twitterdb
-from twdb.dbif import getTopics, esearch
-from twdb.cmdline import processCmdLine
-from twdb.dupdetect import isURL, tokenize, filter_dups, dedupe
+from twdb2.dbconnect import twitterdb
+from twdb2.dbif import getTopics, esearch
+from twdb2.cmdline import processCmdLine
+from twdb2.dupdetect import isURL, tokenize, filter_dups, dedupe
 
 
 def test_connect():

@@ -1,7 +1,7 @@
 bak/*
 twdb.egg-info/*
 *~
-twdb.conf
+twdb2.conf
 twdb/__pycache__/
 twdb.log
 tests/__pycache__
@@ -13,4 +13,5 @@ dist/
 dockerfile
 readfeed.sh
 start-in-container.sh
-twdb/__init__.pyc
+^.pyc
+*.conf

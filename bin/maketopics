@@ -4,9 +4,11 @@
 Run this program to update topics collection in database
   after a change to topics.txt
 """
+import os
 import sys
 
 from collections import namedtuple
+from twdb2.configurator import twdbConfig
 from twdb2.dbif import getTopics, storeTopic, cleanTopicsCollection
 
 """
@@ -30,12 +32,9 @@ def display_all():
 
 
 def main():
+    fname = twdbConfig['topicsfile']
+    fname = os.path.expanduser(fname)
     # clean topics collection before updating
-    try:
-        fname = sys.argv[1]
-    except:
-        print("Must specify topic file name")
-        sys.exit(1)
     cleanTopicsCollection()
     with open(fname) as f:
         for line in f:
