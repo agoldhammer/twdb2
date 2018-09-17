@@ -2,7 +2,7 @@
 """Authenticate to Twitter using tokens from .nany configuration file"""
 import tweepy
 import sys
-from twdb.configurator import twdbConfig
+from twdb2.configurator import twdbConfig
 
 OAUTH_TOKEN = twdbConfig['OAUTH_TOKEN']
 OAUTH_TOKEN_SECRET = twdbConfig['OAUTH_TOKEN_SECRET']
