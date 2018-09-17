@@ -7,7 +7,7 @@ from twdb2.dbif import mapAuthorToLang, getAuthors, storeAuthor
 def main():
     authfile = twdbConfig['authfile']
     authfile = os.path.expanduser(authfile)
-    with open(authfile, "r") as lines:
+    with open(authfile) as lines:
         for line in lines:
             [author, lang] = line.split(':')
             storeAuthor(author, lang.strip())

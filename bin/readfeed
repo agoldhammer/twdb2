@@ -6,18 +6,23 @@ import click
 import logging
 from logging import FileHandler
 from twdb2.twauthenticate import getTwitterApi
+from twdb2.configurator import twdbConfig
 from twdb2.dbif import (storeStatus, DuplicateStatus,
                         get_lastread, store_lastread,
                         mapAuthorToLang)
 from twdb2.prettytext import printStatus
 from tweepy import Cursor
 
-LOGFILENAME = "/var/log/twdb2/twdb2.log"
+LOGFILENAME = twdbConfig['logfile']
+LOGNAME = twdbConfig['logname']
+OWNER = twdbConfig['owner']
+SLUG = twdbConfig['slug']
 
 processed = 0
 added = 0
 skipped = 0
 maxid = 0
+
 
 def pruneStatus(status):
     """Prunes status record to store only info of interest
@@ -52,7 +57,7 @@ def processStatus(i, status, quiet):
         if not quiet:
             out = "\n---\n{}. author {} id {}  time {} via {}"
             print(out.format(i + 1, author, status_id,
-                            created_at, status["source"]))
+                             created_at, status["source"]))
             printStatus(status)
         added += 1
     # if status is already in db, we get here
@@ -64,26 +69,28 @@ def processStatus(i, status, quiet):
 @click.option('--quiet/--verbose', default=True, help="default quiet")
 def main(quiet):
     global maxid
+    # this will return 0, 0 on virgin database
     _, maxid = get_lastread()
-    if maxid == 0:
-        maxid = 1040701975095128064
+    # setting sinceid to None does the right thing
+    sinceid = None if maxid == 0 else maxid
     api = getTwitterApi(wait=True, notify=True)
     for i, status in enumerate(Cursor(api.list_timeline,
-                                      owner_screen_name="artgoldhammer",
-                                      slug="EuropeanNews",
-                                      since_id = maxid).items()):
+                                      owner_screen_name=OWNER,
+                                      slug=SLUG,
+                                      since_id=sinceid).items()):
         processStatus(i, status, quiet)
 
     store_lastread(maxid)
-    msg = "processed {}. added {}. skipped {} maxid {}".format(processed,
-                                                            added, skipped, maxid)
+    msg = f"processed {processed}. added {added}.\
+ skipped {skipped} maxid {maxid}"
     logger.info(msg)
-    print(msg)
+    if not quiet:
+        print(msg)
 
 
 if __name__ == "__main__":
     print("Processing usnews feeds for twdb2")
-    logger = logging.getLogger("euronews")
+    logger = logging.getLogger(LOGNAME)
     logger.setLevel(logging.INFO)
     fh = FileHandler(LOGFILENAME)
     fh.setLevel(logging.INFO)

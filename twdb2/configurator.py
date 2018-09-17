@@ -37,7 +37,10 @@ twdbConfig['DBNAME'] = config.get('db', 'DBNAME')
 
 twdbConfig['authfile'] = config.get('authors', 'authfile')
 twdbConfig['topicsfile'] = config.get('topics', 'topicsfile')
-
+twdbConfig['logfile'] = config.get('logging', 'logfile')
+twdbConfig['logname'] = config.get('logging', 'logname')
+twdbConfig['owner'] = config.get('twitter', 'owner')
+twdbConfig['slug'] = config.get('twitter', 'slug')
 
 if __name__ == '__main__':
     print(twdbConfig)
