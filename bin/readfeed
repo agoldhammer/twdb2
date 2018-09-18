@@ -2,6 +2,7 @@
 
 """read news feeds from twitter"""
 
+from time import sleep
 import click
 import logging
 from logging import FileHandler
@@ -67,25 +68,33 @@ def processStatus(i, status, quiet):
 
 @click.command()
 @click.option('--quiet/--verbose', default=True, help="default quiet")
-def main(quiet):
-    global maxid
-    # this will return 0, 0 on virgin database
-    _, maxid = get_lastread()
-    # setting sinceid to None does the right thing
-    sinceid = None if maxid == 0 else maxid
+@click.option('-d', '--daemon/--no-daemon', default=False, help='run as daemon')
+@click.option('--sleeptime', default=900, help='sleep time in secs')
+def main(quiet, daemon, sleeptime):
+    global maxid, processed, added, skipped
     api = getTwitterApi(wait=True, notify=True)
-    for i, status in enumerate(Cursor(api.list_timeline,
-                                      owner_screen_name=OWNER,
-                                      slug=SLUG,
-                                      since_id=sinceid).items()):
-        processStatus(i, status, quiet)
+    while True:
+        # this will return 0, 0 on virgin database
+        _, maxid = get_lastread()
+        processed = added = skipped = 0
+        # setting sinceid to None does the right thing
+        sinceid = None if maxid == 0 else maxid
+        for i, status in enumerate(Cursor(api.list_timeline,
+                                          owner_screen_name=OWNER,
+                                          slug=SLUG,
+                                          since_id=sinceid).items()):
+            processStatus(i, status, quiet)
 
-    store_lastread(maxid)
-    msg = f"processed {processed}. added {added}.\
- skipped {skipped} maxid {maxid}"
-    logger.info(msg)
-    if not quiet:
-        print(msg)
+        store_lastread(maxid)
+        msg = f"processed {processed}. added {added}.\
+    skipped {skipped} maxid {maxid}"
+        logger.info(msg)
+        if not quiet:
+            print(msg)
+        if not daemon:
+            break
+        else:
+            sleep(sleeptime)
 
 
 if __name__ == "__main__":
