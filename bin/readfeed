@@ -10,7 +10,7 @@ from twdb2.twauthenticate import getTwitterApi
 from twdb2.configurator import twdbConfig
 from twdb2.dbif import (storeStatus, DuplicateStatus,
                         get_lastread, store_lastread,
-                        mapAuthorToLang)
+                        mapAuthorToLang, AuthorNotFound)
 from twdb2.prettytext import printStatus
 from tweepy import Cursor
 
@@ -51,8 +51,13 @@ def processStatus(i, status, quiet):
     try:
         status = pruneStatus(status)
         author = status["author"]
-        language_code = mapAuthorToLang(author)
-        status["language_code"] = language_code
+        try:
+            language_code = mapAuthorToLang(author)
+            status["language_code"] = language_code
+        except AuthorNotFound:
+            # missing authors are logged but recorded as English
+            language_code = 'E'
+            logger.info(f'Author not found {author}')
         storeStatus(status)
         # If, successful, display the entry being processed ...
         if not quiet:
@@ -98,7 +103,7 @@ def main(quiet, daemon, sleeptime):
 
 
 if __name__ == "__main__":
-    print("Processing usnews feeds for twdb2")
+    # print("Processing usnews feeds for twdb2")
     logger = logging.getLogger(LOGNAME)
     logger.setLevel(logging.INFO)
     fh = FileHandler(LOGFILENAME)
