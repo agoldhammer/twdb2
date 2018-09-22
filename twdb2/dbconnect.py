@@ -24,16 +24,12 @@ class Twitterdb:
                                   connect=False)
         self.db = self.client[dbname]
         self.statuses = self.db.statuses
-        self.statuses.ensure_index([("id", 1)], unique=True)
         self.statuses.ensure_index([("text", TEXT)])
         self.statuses.ensure_index([("created_at", ASCENDING)])
         self.authors = self.db.authors
         self.topics = self.db.topics
         self.authors.ensure_index([("author", 1)], unique=True)
         self.topics.ensure_index([("topic", 1)], unique=True)
-        self.topids = self.db.topids
-        self.topids.ensure_index([("topic", 1)])
-        self.topids.ensure_index([("id", 1)])
         self.lastread = self.db.lastread
         try:
             self.client.server_info()  # test connection made
@@ -51,11 +47,3 @@ if __name__ == '__main__':
     """
     print(f"The db host is {DBHOST}")
     print(twitterdb.client.server_info())
-    # search("prevu")
-    # print(expand_topic('*France'))
-    # import maketopics
-    # import storeauthtable
-    # eurodb.db.drop_collection("authors")
-    # eurodb.db.drop_collection("topics")
-    # maketopics.main()
-    # storeauthtable.insert_all()
