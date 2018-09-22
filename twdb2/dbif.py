@@ -113,6 +113,11 @@ def mapAuthorToLang(author):
         return author_record["language_code"]
 
 
+def getUnknownAuthors():
+    unknowns = twitterdb.authors.find({"language_code": "U"})
+    return unknowns
+
+
 def getCount():
     """
     Get count of statusids in db
