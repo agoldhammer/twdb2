@@ -56,7 +56,7 @@ def processStatus(i, status, quiet):
             status["language_code"] = language_code
         except AuthorNotFound:
             # missing authors are logged but recorded as Unknown
-            language_code = 'U'
+            status["language_code"] = 'U'
             logger.info(f'Author not found {author}')
         storeStatus(status)
         # If, successful, display the entry being processed ...
